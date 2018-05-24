@@ -8,11 +8,13 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const passport     = require('./helpers/passport');
+const session = require ('express-session');
 
 
 mongoose.Promise = Promise;
 mongoose
-  .connect('mongodb://localhost/backend', {useMongoClient: true})
+  .connect('mongodb://Alejandrosg11:1234@ds123976.mlab.com:23976/childrenbooks', {useMongoClient: true})
   .then(() => {
     console.log('Connected to Mongo!')
   }).catch(err => {
@@ -23,6 +25,15 @@ const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
+
+app.use(session({
+  secret: "alex",
+  resave: false,
+  saveUninitialized:true
+}));
+
+app.use(passport.initialize());
+app.use(passport.session())
 
 // Middleware Setup
 app.use(logger('dev'));
@@ -49,10 +60,11 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
 
-
-
 const index = require('./routes/index');
+const books = require('./routes/books');
+const auth = require('./routes/auth');
+app.use('/books', books);
 app.use('/', index);
-
+app.use('/',auth);
 
 module.exports = app;
