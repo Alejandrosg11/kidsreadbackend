@@ -3,28 +3,26 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    email: String,
     name: String,
-    profilePic: String,
-    followers: [
+    email: String,
+    age: String,
+    library:[
         {
             type: Schema.Types.ObjectId,
-            ref: "User"
+            ref: "Books"
         }
     ],
-    posts: [
+    level:{
+        type:Number,
+        default:1
+    },
+    booksRead:[
         {
             type: Schema.Types.ObjectId,
-            ref: "Post"
+            ref: "Books"
         }
     ],
-    bio: String,
-    follows: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "User"
-        }
-    ],
+    Avatar:String
 },{
     timestamps: {
         createdAt: "created_at",
