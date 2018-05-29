@@ -10,6 +10,7 @@ const logger       = require('morgan');
 const path         = require('path');
 const passport     = require('./helpers/passport');
 const session = require ('express-session');
+const cors = require('cors');
 
 
 mongoose.Promise = Promise;
@@ -25,11 +26,17 @@ const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
+const options = {
+  credentials:true,
+  origin:true
+}
+app.use(cors(options));
 
 app.use(session({
   secret: "alex",
   resave: false,
-  saveUninitialized:true
+  saveUninitialized:true,
+  cookie:{ httpOnly:true, maxAge:241920000}
 }));
 
 app.use(passport.initialize());
